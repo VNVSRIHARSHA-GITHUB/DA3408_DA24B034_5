@@ -1,0 +1,7 @@
+
+### Cost per row, concurrency 1
+
+| batch | req/s | p50 ms per request | rows/s | ms per row (1000 / rows/s) |
+|---:|---:|---:|---:|---:|
+| 1 | 375.0 | 2.5 | 375 | 2.667 |
+| 100 | 303.2 | 3.2 | 30320 | 0.033 |

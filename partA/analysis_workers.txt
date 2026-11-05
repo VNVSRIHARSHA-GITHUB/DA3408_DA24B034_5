@@ -1,0 +1,12 @@
+
+### Before / after (partA/loadtest_results.json vs partA/loadtest_workers2.json)
+
+| clients | req/s before | req/s after | speed-up | p95 before | p95 after |
+|---:|---:|---:|---:|---:|---:|
+| 1 | 270.5 | 308.2 | 1.14x | 4.2 | 4.4 |
+| 2 | 526.2 | 529.0 | 1.01x | 4.4 | 4.4 |
+| 4 | 403.2 | 660.0 | 1.64x | 15.5 | 11.2 |
+| 8 | 268.8 | 792.5 | 2.95x | 43.5 | 15.3 |
+| 16 | 272.2 | 623.8 | 2.29x | 85.2 | 37.9 |
+
+- Capacity under the SLO: 526.2 -> 792.5 req/s (1.51x).

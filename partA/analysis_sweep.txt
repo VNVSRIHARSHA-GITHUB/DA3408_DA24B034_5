@@ -1,0 +1,15 @@
+
+### Load sweep (partA/loadtest_results.json)
+
+| clients | requests | req/s | p50 ms | p95 ms | p99 ms | errors | Little's Law W = L/X (ms) | p95 <= 80 ms |
+|---:|---:|---:|---:|---:|---:|---:|---:|:--:|
+| 1 | 1082 | 270.5 | 3.7 | 4.2 | 4.8 | 0 | 3.7 | yes |
+| 2 | 2105 | 526.2 | 3.7 | 4.4 | 6.6 | 0 | 3.8 | yes |
+| 4 | 1613 | 403.2 | 8.6 | 15.5 | 20.1 | 0 | 9.9 | yes |
+| 8 | 1075 | 268.8 | 28.8 | 43.5 | 57.0 | 0 | 29.8 | yes |
+| 16 | 1089 | 272.2 | 57.8 | 85.2 | 106.1 | 0 | 58.8 | no |
+
+- Peak throughput: 526.2 req/s.
+- Saturation (first level reaching >= 90% of the peak): 2 clients at 526.2 req/s; beyond it extra clients mostly add queueing (W grows ~ L).
+- Capacity under p95 <= 80 ms: 526.2 req/s (at 2 clients, p95 4.4 ms).
+- The SLO breaks between 8 and 16 clients (p95 43.5 -> 85.2 ms).

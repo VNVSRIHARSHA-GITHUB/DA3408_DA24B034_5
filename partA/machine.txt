@@ -1,0 +1,9 @@
+CPU(s):                                  12
+Model name:                              13th Gen Intel(R) Core(TM) i5-13420H
+Thread(s) per core:                      2
+Core(s) per socket:                      8
+CPU(s) scaling MHz:                      25%
+               total        used        free      shared  buff/cache   available
+Mem:            14Gi       4.5Gi       4.0Gi       759Mi       6.9Gi        10Gi
+Python 3.14.4
+Description:	Ubuntu 26.04 LTS
