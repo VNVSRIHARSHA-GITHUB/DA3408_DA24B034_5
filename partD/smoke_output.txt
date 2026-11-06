@@ -1,0 +1,42 @@
+Smoke test for http://localhost:8000/v1/models/eta:predict
+Expected model: v1    latency limit: p95 <= 80 ms
+
+[PASS] 1. Server is up (/healthz)
+       GET /healthz -> HTTP 200, body {"status":"ok","model_version":"v1"}
+[PASS] 2. Server runs the expected model version
+       expected model v1, server answered with v1
+[PASS] 3. A valid batch gets sensible ETAs
+       1 km -> 21.7 min, 15 km -> 57.8 min, 60 km -> 173.8 min  (each must be a number between 0 and 2000)
+[PASS] 4. Bad input is rejected with HTTP 422
+       negative distance: 422, hour 25: 422, infeasible: 422, empty batch: 422
+[PASS] 5. Sanity: a longer distance never gives a shorter ETA
+       ETA (min) by distance -> 1 km: 21.7, 5 km: 32.0, 10 km: 44.9, 20 km: 70.7, 40 km: 122.3, 80 km: 225.4, 120 km: 328.6
+[PASS] 6. Sanity: more traffic never gives a shorter ETA
+       ETA (min) by traffic index -> 0.0: 53.6, 0.25: 64.3, 0.5: 75.0, 0.75: 85.6, 1.0: 96.3
+[PASS] 7. Same input gives the same output, in the same order
+       in order [251.2, 26.8, 135.2], reversed batch put back in order [251.2, 26.8, 135.2]
+[PASS] 8. Latency is within the limit
+       p95 = 2.4 ms over 50 single-row calls (limit 80 ms)
+
+Result: 8 of 8 checks passed -> GO
+Smoke test for http://localhost:8000/v1/models/eta:predict
+Expected model: v2    latency limit: p95 <= 80 ms
+
+[PASS] 1. Server is up (/healthz)
+       GET /healthz -> HTTP 200, body {"status":"ok","model_version":"v1"}
+[FAIL] 2. Server runs the expected model version
+       expected model v2, server answered with v1
+[PASS] 3. A valid batch gets sensible ETAs
+       1 km -> 21.7 min, 15 km -> 57.8 min, 60 km -> 173.8 min  (each must be a number between 0 and 2000)
+[PASS] 4. Bad input is rejected with HTTP 422
+       negative distance: 422, hour 25: 422, infeasible: 422, empty batch: 422
+[PASS] 5. Sanity: a longer distance never gives a shorter ETA
+       ETA (min) by distance -> 1 km: 21.7, 5 km: 32.0, 10 km: 44.9, 20 km: 70.7, 40 km: 122.3, 80 km: 225.4, 120 km: 328.6
+[PASS] 6. Sanity: more traffic never gives a shorter ETA
+       ETA (min) by traffic index -> 0.0: 53.6, 0.25: 64.3, 0.5: 75.0, 0.75: 85.6, 1.0: 96.3
+[PASS] 7. Same input gives the same output, in the same order
+       in order [251.2, 26.8, 135.2], reversed batch put back in order [251.2, 26.8, 135.2]
+[PASS] 8. Latency is within the limit
+       p95 = 4.3 ms over 50 single-row calls (limit 80 ms)
+
+Result: 7 of 8 checks passed -> NO-GO
