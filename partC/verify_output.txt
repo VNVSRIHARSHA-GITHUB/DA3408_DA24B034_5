@@ -1,0 +1,38 @@
+INFO 2026-11-06 22:46:53,624 serve 96749 -- Started Serve in namespace "serve".
+INFO 2026-11-06 22:46:53,638 serve 96749 -- Connecting to existing Serve app in namespace "serve". New http_options/controller_options will not be applied.
+INFO 2026-11-06 22:46:57,770 serve 96749 -- Application 'eta' is ready at http://127.0.0.1:8100/.
+INFO 2026-11-06 22:47:17,189 serve 96749 -- Deleting app ['eta']
+INFO 2026-11-06 22:47:22,225 serve 96749 -- Connecting to existing Serve app in namespace "serve". New http_options/controller_options will not be applied.
+INFO 2026-11-06 22:47:26,358 serve 96749 -- Application 'eta' is ready at http://127.0.0.1:8100/.
+INFO 2026-11-06 22:47:29,717 serve 96749 -- Connecting to existing Serve app in namespace "serve". New http_options/controller_options will not be applied.
+INFO 2026-11-06 22:47:34,743 serve 96749 -- Application 'eta' is ready at http://127.0.0.1:8100/.
+Ray CPUs: 2.0
+CPU reservations: router 0.1, prod 2 x 0.25, candidate up to 3 x 0.25 = 1.35 of 2.0 CPUs
+Candidate autoscaling_config: {'min_replicas': 1, 'max_replicas': 3, 'target_ongoing_requests': 2, 'upscale_delay_s': 5, 'downscale_delay_s': 60, 'metrics_interval_s': 2, 'look_back_period_s': 10}
+
+Deployed at weight 0.2 (CPU reserved right now: 0.85):
+    EtaProd        HEALTHY  replicas {'RUNNING': 2}
+    EtaCandidate   HEALTHY  replicas {'RUNNING': 1}
+    EtaRouter      HEALTHY  replicas {'RUNNING': 1}
+
+(a) 1000 customers, weight 0.2 -> candidate share 0.203 (Counter({'v1': 797, 'v2': 203}))
+    PASS: within +-0.04 of 0.2
+
+(b) second call for 200 customers: 0 changed arm (43 of them on v2)
+    PASS: every customer got the same arm again
+
+(c) app deleted and redeployed (new router and replicas):
+    EtaProd        HEALTHY  replicas {'RUNNING': 2}
+    EtaCandidate   HEALTHY  replicas {'RUNNING': 1}
+    EtaRouter      HEALTHY  replicas {'RUNNING': 1}
+    0 of 200 customers changed arm after the redeploy
+    PASS: assignment survives a restart (it depends only on the id)
+
+(d) weight 0.2 -> 0.5: candidate share 0.203 -> 0.513; 310 moved prod->candidate, 0 moved candidate->prod
+    PASS: nobody who was on the candidate went back to prod
+
+(e) X-Beta: 1 on 50 requests from prod customers -> Counter({'v2': 50})
+    PASS: header forces the candidate; without it the same customers stay on prod
+
+ALL CHECKS PASSED
+[33m(raylet)[0m Task ServeController.graceful_shutdown failed. There are infinite retries remaining, so the task will be retried. Error: The actor is dead because it was killed by `ray.kill`.
