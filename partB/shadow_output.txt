@@ -1,0 +1,13 @@
+Shadow comparison on 200 identical single-row requests from data/eta_fresh.csv
+  prod      :5101 answered as ['v1']
+  candidate :5102 answered as ['v2']
+
+| metric | value |
+|---|---:|
+| mean absolute difference (min) | 9.48 |
+| median absolute difference (min) | 7.10 |
+| max absolute difference (min) | 51.70 |
+| requests differing by > 10 min | 70 / 200 (35.0 %) |
+| mean prediction prod / candidate (min) | 118.9 / 119.0 |
+| prod latency p50 / p95 (ms) | 4.2 / 7.3 |
+| candidate latency p50 / p95 (ms) | 4.1 / 7.6 |
