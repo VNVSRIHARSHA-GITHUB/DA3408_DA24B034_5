@@ -1,0 +1,9 @@
+data/
+*.joblib
+mlflow.db
+mlruns/
+mlartifacts/
+.venv/
+__pycache__/
+.pytest_cache/
+*.zip
