@@ -30,7 +30,9 @@ def row(**changes):
     return {**GOOD, **changes}
 
 
-# ---------------------------------------------------------------- valid requests
+# valid requests
+
+
 def test_valid_request(client):
     r = client.post(URL, json={"instances": [GOOD]})
     assert r.status_code == 200
@@ -52,7 +54,9 @@ def test_batch_order_preserved(client):
     assert forward == singles
 
 
-# ---------------------------------------------------------------- invalid input
+# invalid input
+
+
 @pytest.mark.parametrize("bad, field", [
     (row(distance_km=0.0), "distance_km"),           # below range
     (row(hour=24), "hour"),                          # above range
@@ -83,7 +87,9 @@ def test_validation_error_body_format(client):
     assert body["details"] and all(set(d) == {"field", "msg"} for d in body["details"])
 
 
-# ---------------------------------------------------------------- cross-field rule
+# cross-field rule
+
+
 def test_infeasible_rejected(client):
     r = client.post(URL, json={"instances": [row(distance_km=150.1, n_stops=21)]})
     assert r.status_code == 422
@@ -96,13 +102,14 @@ def test_infeasible_boundary_accepted(client):
     assert client.post(URL, json={"instances": ok}).status_code == 200
 
 
-# ---------------------------------------------------------------- batch-size limits
+#  batch-size limits
+
 @pytest.mark.parametrize("n, status", [(0, 422), (1, 200), (500, 200), (501, 422)])
 def test_batch_size_limits(client, n, status):
     assert client.post(URL, json={"instances": [GOOD] * n}).status_code == status
 
 
-# ---------------------------------------------------------------- request id
+# request id
 def test_request_id_echoed(client):
     r = client.post(URL, json={"instances": [GOOD]}, headers={"X-Request-ID": "abc-123"})
     assert r.headers["X-Request-ID"] == "abc-123"
@@ -125,7 +132,8 @@ def test_request_id_on_error(client):
     assert generated.headers["X-Request-ID"] == generated.json()["request_id"]
 
 
-# ---------------------------------------------------------------- health + metrics
+#  health + metrics
+
 def test_healthz(client):
     r = client.get("/healthz")
     assert r.status_code == 200
@@ -160,7 +168,8 @@ def test_metrics_not_counted(client):
     assert 'path="/metrics"' not in client.get("/metrics").text
 
 
-# ---------------------------------------------------------------- generic 500
+#  generic 500
+
 def test_generic_500(client, monkeypatch):
     class Broken:
         def predict(self, X):

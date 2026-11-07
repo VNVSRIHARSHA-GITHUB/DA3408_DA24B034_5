@@ -3,9 +3,9 @@ eta_mlflow.py -- Part B: MLflow pyfunc, registry aliases and a multi-criteria pr
 
 Run from the project root (where eta_data.py and data/ live):
     export MLFLOW_TRACKING_URI=sqlite:///mlflow.db
-    python partB/eta_mlflow.py register                 # B1: log + register v1, v2; aliases prod -> v1, candidate -> v2
-    python partB/eta_mlflow.py gate                     # B2: gate with default thresholds
-    python partB/eta_mlflow.py gate --min-rel-gain 0.60 # B2: gate with a stricter gain threshold
+    python partB/eta_mlflow.py register                 #  log + register v1, v2; aliases prod -> v1, candidate -> v2
+    python partB/eta_mlflow.py gate                     #  gate with default thresholds
+    python partB/eta_mlflow.py gate --min-rel-gain 0.60 #  gate with a stricter gain threshold
 
 Ideas reused from the Lecture 4b notebook (mlflow_register.py, promotion_gate): wrapping a joblib bundle
 in a PythonModel, a float64 signature that tolerates ints from JSON, aliases set with MlflowClient.
@@ -30,7 +30,7 @@ RUSH_HOURS = (7, 8, 9, 16, 17, 18, 19)
 EPS = 1e-9  # thresholds are inclusive; EPS absorbs floating-point error exactly at a boundary
 
 
-# ---------------------------------------------------------------- B2: the pure decision function
+# the pure decision function
 def decide(prod, cand, min_rel_gain=0.03, max_p95_ms=10.0, max_slice_regression=0.05):
     """Promote the candidate only if ALL criteria hold. Pure: no I/O, no globals, no randomness.
 
@@ -59,7 +59,7 @@ def decide(prod, cand, min_rel_gain=0.03, max_p95_ms=10.0, max_slice_regression=
     return {"criteria": criteria, "promote": all(criteria.values()), "details": details}
 
 
-# ---------------------------------------------------------------- B1: pyfunc wrapper + registration
+#  pyfunc wrapper + registration
 def _pyfunc_class():
     import mlflow.pyfunc
 
@@ -128,7 +128,7 @@ def register():
     return registered
 
 
-# ---------------------------------------------------------------- B2: evaluation + gate
+#  evaluation + gate
 def evaluate(model, fresh, n_latency=200):
     """Metrics the gate needs, for one loaded pyfunc model, on fresh (never trained on) data."""
     import eta_data

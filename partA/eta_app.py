@@ -1,5 +1,5 @@
 """
-eta_app.py -- SwiftParcel ETA service (Module 4 assignment, Part A).
+eta_app.py -- SwiftParcel ETA service.
 
 Run (from the project root, where data/ lives):
     ETA_MODEL=data/eta_v1.joblib uvicorn eta_app:app --app-dir partA --port 8000
@@ -34,7 +34,7 @@ VERSION = bundle["version"]
 PREDICT_PATH = "/v1/models/eta:predict"
 
 
-# ---------------------------------------------------------------- input contract
+# input contract
 class Delivery(BaseModel):
     model_config = ConfigDict(extra="ignore")  # unknown fields are dropped, like rest_app.py in Lecture 4a
 
@@ -57,7 +57,7 @@ class PredictRequest(BaseModel):
     instances: List[Delivery] = Field(min_length=1, max_length=500)
 
 
-# ---------------------------------------------------------------- metrics (Prometheus text format)
+# metrics (Prometheus text format)
 BUCKETS = (0.001, 0.0025, 0.005, 0.01, 0.025, 0.05, 0.1, 0.25, 0.5, 1.0, 2.5)
 _lock = threading.Lock()
 _requests = {}                      # (path, status) -> count
@@ -95,8 +95,7 @@ def metrics_text() -> str:
         lines.append(f"eta_request_latency_seconds_count {_lat_count}")
     return "\n".join(lines) + "\n"
 
-
-# ---------------------------------------------------------------- app
+# app
 app = FastAPI(title="SwiftParcel ETA service")
 
 

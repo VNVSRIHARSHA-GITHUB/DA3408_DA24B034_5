@@ -49,7 +49,7 @@ class Smoke:
         print(f"[{'PASS' if ok else 'FAIL'}] {name}")
         print(f"       {info}")
 
-    # ------------------------------------------------------------ the checks
+    #  the checks
     def health(self):
         r = self.s.get(self.base + "/healthz", timeout=self.timeout)
         ok = r.status_code == 200 and r.json().get("status") == "ok"

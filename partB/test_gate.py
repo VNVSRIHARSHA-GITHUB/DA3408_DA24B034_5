@@ -1,5 +1,5 @@
 """
-test_gate.py -- tests for the pure decide() function (Part B2), synthetic numbers only.
+test_gate.py -- tests for the pure decide() function (Part-B2), synthetic numbers only.
 Run from the project root:   pytest partB -v
 """
 import pytest
